@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block navbar %}
+<!-- Empty block to hide the navbar for dashboard.html -->
+{% endblock %}
+
+{% block wrapper %}
+<div class="flex flex-col min-h-screen w-full bg-gray-50">
+
+    <header class="fixed top-0 left-0 w-full h-16 bg-white shadow z-50 flex items-center justify-between px-4">
+        <div class="flex items-center space-x-4">
+            <button id="sidebar-toggle-btn" class="bg-white rounded-full shadow p-2 hover:bg-gray-200 transition"
+                aria-label="Open Sidebar">
+                <img src="https://cdn-icons-png.flaticon.com/512/3917/3917244.png" alt="Sidebar Toggle Icon"
+                    class="w-6 h-6">
+            </button>
+            <h2 id="chat-title" class="text-xl font-semibold text-gray-900">New Chat</h2>
+        </div>
+        <div class="flex items-center space-x-2">
+            <button id="rename-chat" class="p-2 rounded-full text-gray-600 hover:text-gray-900 hover:bg-slate-200"
+                aria-label="Rename Chat">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+            </button>
+            <button id="delete-chat" class="p-2 rounded-full text-red-600 hover:text-red-900 hover:bg-red-100"
+                aria-label="Delete Chat">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+            </button>
+            <!-- Profile Dropdown Button -->
+            <button id="profile-button" type="button"
+                class="flex items-center focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                <img class="w-8 h-8 rounded-full border-2 border-white"
+                    src="{{ session.get('profile_image') or url_for('static', filename='images/default-avatar.png') }}"
+                    alt="Profile">
+            </button>
+            <div id="profile-dropdown"
+                class="absolute right-0 top-12 mt-1 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 hidden z-50">
+                <a href="{{ url_for('main.profile_view') }}"
+                    class="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Your
+                    Profile</a>
+                <a href="{{ url_for('auth.logout') }}"
+                    class="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Sign
+                    out</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Below Header: Flex Row (Sidebar + Main) -->
+    <div class="flex flex-row pt-16 h-[calc(100vh-4rem)]">
+
+        <!-- Sidebar (Fixed Width) -->
+        <aside id="sidebar" class="w-64 bg-white shadow h-full fixed left-0 top-16 z-40 overflow-y-auto flex flex-col">
+            <div class="p-4 flex justify-between items-center border-b">
+                <h2 class="text-lg font-semibold">Chats</h2>
+                <button id="sidebar-close-btn" class="p-2 rounded hover:bg-gray-200" aria-label="Close Sidebar">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3917/3917244.png" alt="Close Sidebar Icon"
+                        class="w-5 h-5">
+                </button>
+            </div>
+
+            <!-- New Chat Button -->
+            <div class="p-4">
+                <button id="new-chat-btn"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center justify-center px-4 py-2">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    New Chat
+                </button>
+            </div>
+
+            <!-- Chat History -->
+            <div id="chat-history" class="flex-1 overflow-y-auto px-3 py-2 space-y-2"></div>
+        </aside>
+
+        <!-- Main Content -->
+        <main id="chat-content" class="flex-1 ml-64 overflow-hidden flex flex-col">
+            <!-- Chat Header inside Main -->
+            <!-- <div class="bg-white shadow p-4 flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <button id="sidebar-toggle-btn" class="bg-white rounded-full shadow p-2 hover:bg-gray-200 transition" aria-label="Open Sidebar">
+            <img src="https://cdn-icons-png.flaticon.com/512/3917/3917244.png" alt="Sidebar Toggle Icon" class="w-6 h-6">
+          </button>
+          <h2 id="chat-title" class="text-xl font-semibold text-gray-900">New Chat</h2>
+        </div>
+      </div> -->
+
+            <!-- Chat Messages -->
+            <section id="chat-messages" class="flex-1 overflow-y-auto p-6 space-y-6 h-[calc(100vh-8rem)]">
+                <!-- Your messages here -->
+            </section>
+            
+            <!-- Chat Input -->
+<form id="chat-form" class="fixed bottom-0 left-0 right-0 z-40 p-4 bg-white flex justify-center">
+    <div class="w-full max-w-2xl bg-slate-100 rounded-2xl px-4 py-2 shadow-md flex items-center relative">
+        <textarea id="message" name="message" rows="1"
+            class="block w-full resize-none bg-transparent border-none focus:outline-none focus:ring-0 focus:border-transparent text-gray-900 placeholder-gray-500 pr-12"
+            placeholder="Type your message here..."></textarea>
+        <button type="submit"
+            class="absolute right-4 bottom-3 flex items-center justify-center h-10 w-10 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition duration-300"
+            aria-label="Send Message">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+        </button>
+    </div>
+</form>
+    </main>
+    </div>
+</div>
+
+{% include "modals/rename_modal.html" %}
+{% include "modals/delete_modal.html" %}
+{% include "modals/error_modal.html" %}
+{% include "components/toast_warning.html" %}
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script src="{{ url_for('static', filename='js/sidebar.js') }}"></script>
+<script src="{{ url_for('static', filename='js/base.js') }}"></script>
+<script>
+    function scrollToBottom() {
+        const messages = document.getElementById('chat-messages');
+        messages.scrollTop = messages.scrollHeight;
+    }
+    window.addEventListener('load', scrollToBottom);
+    const chatMessages = document.getElementById('chat-messages');
+    const observer = new MutationObserver(scrollToBottom);
+    observer.observe(chatMessages, { childList: true, subtree: true });
+</script>
+{% endblock %}

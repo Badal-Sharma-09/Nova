@@ -1,0 +1,7 @@
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+input, textarea {
+    padding: 0.5rem 0.75rem; /* = py-2 px-3 */
+  }  

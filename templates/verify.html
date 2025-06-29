@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white dark:bg-gray-700 shadow-2xl rounded-3xl w-full max-w-md overflow-hidden grid md:grid-cols-1 transform transition-transform duration-300 hover:scale-105">
+    <div class="p-8 text-center">
+      <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Verify OTP</h2>
+      <p class="text-sm text-gray-600 dark:text-gray-300 mb-6">Please enter the OTP sent to your email.</p>
+      
+      <form method="POST" class="space-y-6">
+        <!-- {{ csrf_token() }} -->
+        <input type="text" name="otp" placeholder="Enter your OTP" required
+          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white dark:border-gray-500" />
+        
+        <button type="submit"
+          class="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 dark:bg-blue-600 dark:hover:bg-blue-700">
+          Verify OTP
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

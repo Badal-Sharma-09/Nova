@@ -1,0 +1,194 @@
+/* Animations */
+.fade-enter {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.fade-exit {
+  opacity: 1;
+}
+
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+/* Mobile Menu Slide Animation */
+@keyframes slideDownFade {
+  0% {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mobile-menu-enter {
+  animation: slideDownFade 400ms ease forwards;
+}
+
+.mobile-menu-exit {
+  animation: slideDownFade 300ms ease reverse forwards;
+}
+
+/* Profile Dropdown Animation */
+@keyframes fadeInDropdown {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-enter {
+  animation: fadeInDropdown 300ms ease forwards;
+}
+
+.dropdown-exit {
+  animation: fadeInDropdown 250ms ease reverse forwards;
+}
+
+/* General Layout */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  background: linear-gradient(to bottom right, #f9fafb, #f1f5f9);
+}
+
+/* Sticky Navbar */
+#navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Navbar */
+#nav {
+  background-color: #4f46e5;
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Mobile menu */
+#mobile-menu {
+  transition: max-height 0.4s ease;
+  overflow: hidden;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  z-index: 999;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+/* Buttons Improvements */
+button, a.button-like {
+  transition: all 200ms ease;
+  transform-origin: center;
+}
+
+button:hover, a.button-like:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+button:focus, a.button-like:focus {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+/* Wrapper for input and label */
+.input-group {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+/* Input Field Styling */
+.input-group input {
+  width: 100%;
+  padding: 1.2rem 1rem 0.5rem 1rem;
+  border: 2px solid transparent;
+  border-radius: 0.75rem;
+  background-color: #f9fafb;
+  transition: all 200ms ease;
+  font-size: 1rem;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #6366f1;
+}
+
+/* Label Styling */
+.input-group label {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background-color: #f9fafb;
+  padding: 0 0.25rem;
+  font-size: 1rem;
+  color: #6b7280;
+  transition: 0.2s ease all;
+  pointer-events: none;
+}
+
+/* Shrink label on input focus or if input has value */
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label {
+  top: 0.3rem;
+  left: 0.75rem;
+  font-size: 0.75rem;
+  color: #6366f1;
+}
+
+/* Form Containers */
+.form-container {
+  background: #ffffff;
+  border-radius: 0.75rem;
+  padding: 2rem;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+  transition: box-shadow 200ms ease;
+}
+
+.form-container:hover {
+  box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+}
+
+/* Links */
+a {
+  transition: color 200ms ease;
+}
+
+a:hover {
+  color: #4f46e5;
+}
+
+/* Footer */
+footer {
+  background: #f3f4f6;
+  color: #6b7280;
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+/* Better text selection */
+::selection {
+  background-color: #6366f1;
+  color: #ffffff;
+}

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block wrapper %}
+<div class="max-w-2xl mx-auto mt-10 p-6 bg-white dark:bg-gray-900 shadow-lg rounded-lg">
+  <h2 class="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-white">Edit Profile</h2>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category, message in messages %}
+  <div class="mb-4 text-sm text-white px-4 py-2 rounded {{ 'bg-red-500' if category == 'error' else 'bg-green-500' }}">
+    {{ message }}
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+  <form action="{{ url_for('main.edit_profile') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <!-- Profile Image Display -->
+    <div class="flex items-center justify-center">
+      <img src="{{ user.get('profile_image', url_for('static', filename='images/default-avatar.png')) }}"
+        alt="Profile Image" class="h-24 w-24 rounded-full object-cover border-4 border-gray-300 dark:border-gray-700">
+    </div>
+
+    <!-- Upload Image -->
+    <div>
+      <label for="profile_image" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Change Profile
+        Image</label>
+      <input type="file" name="profile_image" accept="image/*"
+        class="file:mr-4 file:rounded-full file:border-0 file:bg-violet-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-violet-700 hover:file:bg-violet-100 dark:file:bg-violet-600 dark:file:text-violet-100 dark:hover:file:bg-violet-500 ..." />
+    </div>
+
+    <!-- Username -->
+    <div>
+      <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Username</label>
+      <input type="text" name="username" value="{{ user.username }}"
+        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+    </div>
+
+    <!-- Email -->
+    <div>
+      <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+      <input type="email" name="email" value="{{ user.email }}" {% if user.password==None %}readonly
+        title="Google-authenticated users cannot change email" {% endif %}
+        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+    </div>
+
+    <!-- Password -->
+    <div>
+      <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">New Password</label>
+      <input type="password" name="password" placeholder="Leave blank to keep current"
+        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+    </div>
+
+    <!-- Confirm Password -->
+    <div>
+      <label for="confirm_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm New
+        Password</label>
+      <input type="password" name="confirm_password" placeholder="Re-enter new password"
+        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+    </div>
+
+    <!-- Submit -->
+    <div class="text-center">
+      <button type="submit"
+        class="inline-block bg-green-600 text-white px-6 py-2 rounded-full font-medium hover:bg-green-700 transition">
+        Save Changes
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}

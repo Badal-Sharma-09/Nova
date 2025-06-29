@@ -1,0 +1,82 @@
+  <!-- Navbar -->
+   <header>
+  <nav id="navbar" class="bg-gray-800">
+    <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+      <div class="relative flex h-16 items-center justify-between">
+        <!-- Mobile Menu Button -->
+        <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+          <button id="mobile-menu-button" type="button"
+            class="flex items-center space-x-1 p-2 text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+            <svg id="menu-icon-open" class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5" />
+            </svg>
+            <svg id="menu-icon-close" class="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            <span class="text-white ml-4 text-sm">Menu</span>
+          </button>
+        </div>
+  
+        <!-- Left Side: Logo + Links -->
+        <div class="flex flex-1 items-center justify-start space-x-6">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo"
+            class="h-10 w-10 object-cover rounded" />
+          <div class="hidden sm:flex space-x-4">
+            <a href="{{ url_for('main.index') }}" class="text-white hover:text-gray-300">Home</a>
+            <a href="{{ url_for('contact.contact') }}" class="text-white hover:text-gray-300">Contact</a>
+          </div>
+        </div>
+  
+        <!-- Right Side -->
+        <div class="relative flex items-center space-x-2">
+          {% if session.get('username') %}
+          <button id="profile-button" type="button"
+            class="flex items-center focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+            <img class="w-8 h-8 rounded-full border-2 border-white"
+              src="{{ session.get('profile_image') or url_for('static', filename='images/default-avatar.png') }}" alt="Profile">
+          </button>
+          <div id="profile-dropdown"
+            class="absolute right-0 top-12 mt-1 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 hidden z-50">
+            <a href="{{ url_for('main.profile_view') }}"
+              class="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Your Profile</a>
+            <a href="{{ url_for('auth.logout') }}"
+              class="block px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">Sign out</a>
+          </div>
+          {% else %}
+          <div class="flex space-x-2">
+            <a href="{{ url_for('auth.login') }}"
+              class="bg-blue-600 text-white text-sm px-4 py-2 rounded-full hover:bg-blue-700 transition">Login</a>
+            <a href="{{ url_for('auth.register') }}"
+              class="bg-green-600 text-white text-sm px-4 py-2 rounded-full hover:bg-green-700 transition">Register</a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+
+     <!-- Mobile Menu -->
+     <div id="mobile-menu" class="sm:hidden hidden transition-all duration-300 ease-in-out transform">
+      <div class="space-y-1 px-2 pt-2 pb-3">
+        <a href="{{ url_for('main.index') }}"
+          class="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white">Home</a>
+        <a href="{{ url_for('contact.contact') }}"
+          class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Contact</a>
+        {% if session.get('username') %}
+        <a href="{{ url_for('main.profile_view') }}"
+          class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Profile</a>
+        <a href="{{ url_for('auth.logout') }}"
+          class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Sign out</a>
+        {% else %}
+        <a href="{{ url_for('auth.login') }}"
+          class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Login</a>
+        <a href="{{ url_for('auth.register') }}"
+          class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Register</a>
+        {% endif %}
+      </div> 
+    </div> 
+  
+  </header>
+  

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html data-theme="transition-colors duration-300">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>Nova</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='output.css') }}">
+</head>
+
+<body
+  class="bg-white text-black dark:bg-gray-900 dark:text-white min-h-screen flex flex-col transition-colors duration-300">
+  
+  {% block navbar %}
+  {% include 'partials/navbar.html' %}
+  {% endblock %} 
+  
+  <main class="flex-grow w-full">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="w-full px-4 sm:px-6 lg:px-8">
+      {% for category, message in messages %}
+      <div class="my-4 px-4 py-2 rounded shadow-md
+                    {% if category == 'success' %}bg-green-100 text-green-800{% endif %}
+                    {% if category == 'error' %}bg-red-100 text-red-800{% endif %}">
+        {{ message }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+    {% block wrapper %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-100 dark:bg-gray-800 text-center text-sm text-gray-500 dark:text-gray-300 py-4 mt-auto">
+    &copy; {{ current_year }} Nova AI. All rights reserved.
+  </footer>
+
+  {% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  {% endblock %}
+
+  {% block scripts %}
+  <script src="{{ url_for('static', filename='js/base.js') }}"></script>
+  {% endblock %}
+</body>
+
+</html>

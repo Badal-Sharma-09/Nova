@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block wrapper %}
+  <div class="w-full">
+    {% block content %}
+<div class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white dark:bg-gray-700 shadow-2xl rounded-3xl w-full max-w-md overflow-hidden grid md:grid-cols-1 transform transition-transform duration-300 hover:scale-105">
+    <div class="p-8 text-center">
+      <!-- SVG Logo -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" class="mx-auto mb-6 w-48 h-48 animate-pulse">
+        <circle cx="200" cy="200" r="150" fill="#3B82F6" />
+        <circle cx="200" cy="200" r="120" fill="#FFFFFF" />
+        <circle cx="200" cy="200" r="90" fill="#3B82F6" />
+        <circle cx="200" cy="200" r="60" fill="#FFFFFF" />
+        <text x="200" y="200" text-anchor="middle" fill="#2563EB" font-size="40" font-weight="bold" dy=".3em">OTP</text>
+      </svg>
+
+      <h2 class="text-2xl font-bold mb-2 text-gray-800 dark:text-white">Verify OTP</h2>
+      <p class="text-sm text-gray-600 dark:text-gray-300 mb-6">Enter the 6-digit code sent to your email.</p>
+
+      <!-- OTP Input Boxes -->
+      <div id="otp-container" class="flex justify-center space-x-4 mb-6">
+        {% for _ in range(6) %}
+        <input type="tel" maxlength="1" class="otp-box w-12 h-16 text-center text-2xl border-2 border-blue-500 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-white dark:border-blue-400 transition-transform duration-300 hover:scale-110" autofocus>
+        {% endfor %}
+      </div>
+
+      <!-- Resend OTP Button with Timer -->
+      <div class="text-sm text-gray-600 dark:text-gray-300 mb-4">
+        <span>Didn't receive code?</span>
+        <button id="resend-btn" class="ml-1 text-blue-500 dark:text-blue-400 hover:underline disabled:text-gray-400" onclick="resendOTP()" disabled>
+          Resend OTP (<span id="countdown">30</span>s)
+        </button>
+      </div>
+
+      <!-- Verify OTP Button -->
+      <button id="verify-btn" class="w-full py-4 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-transform duration-300 hover:scale-105 dark:bg-blue-600 dark:hover:bg-blue-700">
+        Verify OTP
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden Form for OTP Submission -->
+<form id="otp-form" method="POST" action="/verify_otp" class="hidden">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <input type="hidden" name="otp" id="hidden-otp" />
+  <input type="hidden" name="email" value="{{ email }}" />
+</form>
+
+<!-- Hidden Resend OTP Form -->
+<form id="resend-form" method="POST" action="/resend_otp" class="hidden">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <input type="hidden" name="email" value="{{ email }}">
+</form>
+{% endblock %}
+
+{% block scripts %}
+<!-- <script nonce="{{ nonce }}"> -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    console.log("OTP page loaded, starting scripts...");
+    const inputs = document.querySelectorAll('.otp-box');
+    const form = document.getElementById('otp-form');
+    const submitButton = document.getElementById('verify-btn');
+    const resendButton = document.getElementById('resend-btn');
+    const countdownSpan = document.getElementById('countdown');
+
+    // Only allow digit input and auto-focus the next box
+    inputs.forEach((input, idx) => {
+      input.addEventListener('input', () => {
+        input.value = input.value.replace(/[^0-9]/g, '');
+        if (input.value && idx < inputs.length - 1) {
+          inputs[idx + 1].focus();
+        }
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && input.value === '' && idx > 0) {
+          inputs[idx - 1].focus();
+        }
+      });
+    });
+
+    // Handle Verify button click
+    submitButton.addEventListener('click', function (e) {
+      e.preventDefault();
+      const otp = Array.from(inputs).map(input => input.value).join('');
+      console.log("OTP entered:", otp);
+      if (otp.length === 6) {
+        document.getElementById('hidden-otp').value = otp;
+        form.submit();
+      } else {
+        alert("Please enter the full 6-digit OTP.");
+      }
+    });
+
+    // Countdown logic for Resend button
+    let countdown = 30;
+    let interval = setInterval(() => {
+      countdown--;
+      countdownSpan.textContent = countdown;
+      if (countdown <= 0) {
+        clearInterval(interval);
+        resendButton.disabled = false;
+        resendButton.textContent = "Resend OTP";
+      }
+    }, 1000);
+
+    // Handle Resend OTP button click
+    window.resendOTP = function () {
+      resendButton.disabled = true;
+      resendButton.textContent = "Resending...";
+      document.getElementById('resend-form').submit();
+
+      countdown = 30;
+      resendButton.textContent = "Resend OTP (30s)";
+      interval = setInterval(() => {
+        countdown--;
+        countdownSpan.textContent = countdown;
+        if (countdown <= 0) {
+          clearInterval(interval);
+          resendButton.disabled = false;
+          resendButton.textContent = "Resend OTP";
+        }
+      }, 1000);
+    }
+  });
+</script>
+{% endblock %}
+</div>
+{% endblock %}
