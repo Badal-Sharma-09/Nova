@@ -75,11 +75,11 @@ GOOGLE_REDIRECT_URI=http://127.0.0.1:5000/login/google/authorize
 4. Create OAuth 2.0 credentials:
    - Set authorized redirect URI to: `http://127.0.0.1:5000/login/google/authorize`
    - Set authorized JavaScript origins to: `http://127.0.0.1:5000`
-5. Create API key for Gemini AI
+5. Create an API key for Gemini AI
 
 ## MongoDB Setup
 
-1. Create a MongoDB Atlas account or use local MongoDB
+1. Create a MongoDB Atlas account or use a local MongoDB
 2. Create a new database named "chatbot"
 3. Get your connection string and add it to the `.env` file
 
@@ -99,6 +99,75 @@ flask --app app:create_app --debug run
 ```
 http://127.0.0.1:5000
 ```
+## 🔐 Enable 2-Step Verification
+
+To enhance the security of your Google Account and generate app passwords:
+
+1. Go to [Google Account Security Settings](https://myaccount.google.com/security).
+2. Under the **"Signing in to Google"** section, click on **"2-Step Verification"** and follow the on-screen instructions to enable it.
+
+---
+
+## 📲 Create an App Password
+
+Once 2-Step Verification is enabled:
+
+1. Return to the **Security** section.
+2. Click on **"App passwords"** (you may be prompted to sign in again).
+3. Under **"Select app"**, choose **"Other (Custom name)"** and enter a descriptive name (e.g., `FlaskApp`).
+4. Click **"Generate"**.
+
+> ✅ A 16-character app password will be displayed. Save it securely — this will be used by your application.
+
+---
+
+## 📨 Configure Email in Your Application
+
+Set the following environment variables in your operating system or deployment environment:
+
+```bash
+MAIL_USERNAME=your-email@gmail.com
+MAIL_PASSWORD=abcd efgh ijkl mnop  # Use without spaces when setting
+```
+
+> 🔒 Ensure the password is used without spaces in the actual configuration:
+```bash
+abcd efgh ijkl mnop  # Displayed with spaces for readability
+```
+becomes:
+```bash
+MAIL_PASSWORD=abcdefghijklmnop
+```
+
+---
+
+## 🚀 Redis Server Setup (Recommended for Rate Limiting)
+
+To use Redis for rate limiting in your Flask application:
+
+### Install Redis
+
+- **Linux (Debian/Ubuntu):**
+  ```bash
+  sudo apt update
+  sudo apt install redis
+  ```
+
+- **macOS (using Homebrew):**
+  ```bash
+  brew install redis
+  ```
+
+- **Windows:**
+  Install [Redis for Windows](https://github.com/microsoftarchive/redis/releases) or use WSL2.
+
+### Start Redis Server
+
+```bash
+redis-server
+```
+
+Ensure the Redis server is running before starting your Flask application.
 
 ## Usage Guide
 
@@ -154,47 +223,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Support
 
 For support, please open an issue in the repository or contact the maintainers.
-
-## As of May 30, 2022, Google has discontinued the "Less Secure Apps" feature, which previously allowed applications to connect using just a username and password. Now, if your account has 2-Step Verification enabled, you need to create an App Password to allow less secure apps or devices to access your Google Account. ​
-
-Solution: Generating an App Password
-
-To resolve this issue, follow these steps to generate an App Password for your application:
-
-## Enable 2-Step Verification:
-
-Go to your Google Account Security Settings.​
-
-Find the "Signing in to Google" section.​
-Gist
-
-Click on "2-Step Verification" and follow the prompts to enable it.​
-
-Create an App Password:
-
-After enabling 2-Step Verification, return to the "Security" section.​
-
-Click on "App Passwords."​
-
-You might be prompted to sign in again.​
-
-In the "Select app" dropdown, choose "Other (Custom name)" and enter a name that helps you remember the purpose (e.g., "FlaskApp").​
-
-Click "Generate."​
-Medium
-
-A 16-character password will appear. Note this down securely; this is the password your application will use.​
-Invoice Ninja Forum
-Then, set the environment variables MAIL_USERNAME and MAIL_PASSWORD in your operating system or deployment environment.
-
-MAIL_PASSWORD=abcd efgh ijkl mnop  # No spaces when used
-
-Redis server (recommended for rate limiting)
-Make sure you have Redis installed and running. If you haven't:
-
-For Windows: Install Redis for Windows
-
-For Linux/macOS: Use sudo apt install redis or brew install redis
-
-Then start Redis:
-redis-server
